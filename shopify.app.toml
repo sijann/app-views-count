@@ -1,0 +1,27 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+name = "views-count"
+client_id = "f47ca1b14a83031ef2964ce6b51e8a9f"
+application_url = "https://lucy-impose-voted-convenient.trycloudflare.com"
+embedded = true
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "write_products"
+
+[auth]
+redirect_urls = [
+  "https://lucy-impose-voted-convenient.trycloudflare.com/auth/callback",
+  "https://lucy-impose-voted-convenient.trycloudflare.com/auth/shopify/callback",
+  "https://lucy-impose-voted-convenient.trycloudflare.com/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2023-07"
+
+[pos]
+embedded = false
+
+[build]
+automatically_update_urls_on_dev = true
+dev_store_url = "gearupairsoft-demo.myshopify.com"

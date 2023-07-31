@@ -1,0 +1,42 @@
+<div class="nerd--viewsCount" id="nerd--viewsCount">Loading</div>
+<script>
+  async function nerdUpdateCount() {
+    fetch(
+      `https://views-count-shopify.onrender.com/api/count?store={{ shop.domain | split: '.' | first }}&product={{ product.id }}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+      .then(function (response) {
+        if (response.ok) {
+          return response.text();
+        } else {
+          throw new Error('Error updating view count: ' + response.statusText);
+        }
+      })
+      .then(function (data) {
+        let responseData = JSON.parse(data);
+        if (responseData.viewsCount) {
+          document.getElementById('nerd--viewsCount').innerHTML = responseData.displayText;
+        }
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+  }
+  nerdUpdateCount();
+</script>
+
+{% schema %}
+{
+  "name": "Views Count",
+  "target": "section",
+  "settings": [
+    { "type": "product", "id": "product", "label": "product", "autofill": true },
+    { "type": "color", "id": "colour", "label": "Star Colour", "default": "#ff0000" }
+  ]
+}
+{% endschema %}
