@@ -131,6 +131,7 @@ export default function Index() {
   };
 
   const handleUpdate = async () => {
+    setIsButtonLoading(true)
     try {
       const response = await fetch(
         "https://views-count-shopify.onrender.com/api/store",
@@ -159,6 +160,7 @@ export default function Index() {
       console.error("Error updating store settings:", error);
       showToast("error");
     } finally {
+      setIsButtonLoading(false)
     }
   };
 
@@ -183,17 +185,25 @@ export default function Index() {
       .catch((error) => {
         console.error('Error fetching data:', error);
         
+      }).finally( ()=>{
+        setIsPageLoading(false)
       });
   }, []);
+
+  const [isPageLoading, setIsPageLoading] = useState(true)
+  const [isButtonLoading, setIsButtonLoading] = useState(false);
 
   return (
 
     <Page>
-      {  emptyState ? <InEmptyState /> :
-      <>
       <ui-title-bar title="Products Views Counter">
-        <button variant="primary">Save</button>
       </ui-title-bar>
+      {isPageLoading ? 
+      <LegacyStack vertical alignment="center" distribution="center">
+      <Spinner />
+      </LegacyStack> : (
+        emptyState ? <InEmptyState setEmptyState={setEmptyState} setSelectedTimeFrame={setSelectedTimeFrame} setDisplayText={setDisplayText} setMinumunViews={setMinimumViews} shop={shop} showToast={showToast} setIsPageLoading={setIsPageLoading} /> :
+      <>
       <LegacyCard sectioned>
         <LegacyStack vertical>
           <Text as="h1" variant="headingMd">
@@ -223,14 +233,14 @@ export default function Index() {
               multiline={2}
               type="text"
               value={displayText}
-              helpText="Eg. 990 people viewed this product in the last hour."
+              helpText="Eg. '[count] people viewed this product in last [time]' will look like: '990 people viewed this product in last hour.' "
               onChange={handleDisplayTextChange}
               autoComplete="off"
             />
           </FormLayout.Group>
               <LegacyStack distribution="trailing">
-                <Button primary onClick={handleUpdate}>
-                  Update
+                <Button  primary onClick={handleUpdate}>
+                   { isButtonLoading ? <Spinner size="small" /> : "Update" }
                 </Button>
               </LegacyStack>
             </FormLayout>
@@ -254,7 +264,9 @@ export default function Index() {
       </Frame>
 
       </>
-      }
+      
+      )
+    }
     </Page>
   );
 }
